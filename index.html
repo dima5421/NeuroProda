@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>NeuroProda</title>
+
+    <!-- Дизайн -->
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="topbar">
+
+        <div class="brand">
+
+            <div class="logo">
+                Neuro<span>Proda</span>
+            </div>
+
+            <div class="subtitle">
+                AI text continuation
+            </div>
+
+        </div>
+
+
+        <div class="status">
+
+            <span
+                class="status-dot"
+                id="statusDot"
+            ></span>
+
+            <span id="statusText">
+                Online
+            </span>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================
+         MAIN
+    ========================== -->
+
+    <main class="layout">
+
+
+        <!-- =========================
+             SIDEBAR
+        ========================== -->
+
+        <aside class="sidebar">
+
+            <div class="side-title">
+                TOPIC
+            </div>
+
+
+            <div class="topics">
+
+
+                <button
+                    class="topic active"
+                    type="button"
+                >
+                    Без темы
+                </button>
+
+
+                <button
+                    class="topic"
+                    type="button"
+                >
+                    Комедия
+                </button>
+
+
+                <button
+                    class="topic"
+                    type="button"
+                >
+                    Пацанские цитаты
+                </button>
+
+
+                <button
+                    class="topic"
+                    type="button"
+                >
+                    История
+                </button>
+
+
+                <button
+                    class="topic"
+                    type="button"
+                >
+                    Фантастика
+                </button>
+
+
+                <button
+                    class="topic"
+                    type="button"
+                >
+                    Хоррор
+                </button>
+
+
+                <button
+                    class="topic"
+                    type="button"
+                >
+                    Игры
+                </button>
+
+
+                <button
+                    class="topic"
+                    type="button"
+                >
+                    Мемы
+                </button>
+
+
+                <button
+                    class="topic"
+                    type="button"
+                >
+                    Технологии
+                </button>
+
+
+                <button
+                    class="topic"
+                    type="button"
+                >
+                    Музыка
+                </button>
+
+
+                <button
+                    class="topic"
+                    type="button"
+                >
+                    Теории заговора
+                </button>
+
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- =========================
+             WORKSPACE
+        ========================== -->
+
+        <section class="workspace">
+
+
+            <!-- =========================
+                 INPUT
+            ========================== -->
+
+            <section class="panel">
+
+                <div class="panel-header">
+
+
+                    <div>
+
+                        <h1>
+                            Continue your text
+                        </h1>
+
+                        <p>
+                            Write the beginning,
+                            and NeuroProda will continue it.
+                        </p>
+
+                    </div>
+
+
+                    <div class="model-badge">
+                        NEURO AI
+                    </div>
+
+
+                </div>
+
+
+
+                <textarea
+                    id="input"
+                    maxlength="3000"
+                    placeholder="For example: Arthur opened the door and saw..."
+                ></textarea>
+
+
+
+                <div class="input-bottom">
+
+
+                    <div class="counter">
+
+                        <span id="counter">
+                            0
+                        </span>
+
+                        / 3000
+
+                    </div>
+
+
+                    <div class="actions">
+
+
+                        <button
+                            id="clearBtn"
+                            class="secondary"
+                            type="button"
+                        >
+                            Clear
+                        </button>
+
+
+                        <button
+                            id="generateBtn"
+                            class="generate"
+                            type="button"
+                        >
+                            ✦ Continue
+                        </button>
+
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="note">
+
+                    The more interesting the beginning,
+                    the more interesting the continuation.
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =========================
+                 RESULT
+            ========================== -->
+
+            <section class="panel result-panel">
+
+
+                <div class="panel-header">
+
+
+                    <div>
+
+                        <h2>
+                            Result
+                        </h2>
+
+                        <p>
+                            Your generated text will appear here.
+                        </p>
+
+                    </div>
+
+
+                    <div class="result-icon">
+                        ✦
+                    </div>
+
+
+                </div>
+
+
+
+                <div
+                    id="result"
+                    class="result"
+                >
+
+                    <div class="empty-result">
+
+
+                        <div class="empty-icon">
+                            ✦
+                        </div>
+
+
+                        <div class="empty-title">
+                            Nothing here yet
+                        </div>
+
+
+                        <div class="empty-text">
+
+                            Write the beginning of a text
+                            and press “Continue”.
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </section>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer>
+
+        NeuroProda © 2026
+
+    </footer>
+
+
+
+    <!-- JavaScript -->
+
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>
