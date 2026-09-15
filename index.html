@@ -10,10 +10,17 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>NeuroProda</title>
+    <meta
+        name="description"
+        content="NeuroProda — многоязычное AI-продолжение текста."
+    >
 
-    <!-- Дизайн -->
-    <link rel="stylesheet" href="style.css">
+    <title>NeuroProda — AI text continuation</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
 </head>
 
@@ -21,9 +28,72 @@
 <body>
 
 
-    <!-- =========================
-         HEADER
-    ========================== -->
+    <!-- ==================================================
+         SAFETY WARNING
+    =================================================== -->
+
+    <div
+        id="safetyModal"
+        class="safety-modal"
+        aria-hidden="false"
+    >
+
+        <div
+            class="safety-box"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="safetyTitle"
+        >
+
+            <div class="safety-icon">
+                !
+            </div>
+
+
+            <h2 id="safetyTitle">
+                Перед началом
+            </h2>
+
+
+            <p>
+                Нейропрода не принимает запросы на острые
+                темы, например — про политику либо
+                самоуб**ство.
+            </p>
+
+
+            <p>
+                Люди могут серьёзно отнестись к текстам
+                под данные темы, и такие материалы могут
+                быть восприняты неправильно или причинить
+                вред.
+            </p>
+
+
+            <p>
+                Пожалуйста, используйте NeuroProda для
+                безопасных историй, юмора, фантастики,
+                игр, музыки и других нейтральных тем.
+            </p>
+
+
+            <button
+                id="closeSafetyBtn"
+                type="button"
+                disabled
+            >
+                Закрыть через 5
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==================================================
+         TOP BAR
+    =================================================== -->
 
     <header class="topbar">
 
@@ -57,16 +127,16 @@
 
 
 
-    <!-- =========================
+    <!-- ==================================================
          MAIN
-    ========================== -->
+    =================================================== -->
 
     <main class="layout">
 
 
-        <!-- =========================
+        <!-- ==================================================
              SIDEBAR
-        ========================== -->
+        =================================================== -->
 
         <aside class="sidebar">
 
@@ -172,16 +242,16 @@
 
 
 
-        <!-- =========================
+        <!-- ==================================================
              WORKSPACE
-        ========================== -->
+        =================================================== -->
 
         <section class="workspace">
 
 
-            <!-- =========================
-                 INPUT
-            ========================== -->
+            <!-- ==================================================
+                 INPUT PANEL
+            =================================================== -->
 
             <section class="panel">
 
@@ -210,13 +280,12 @@
                 </div>
 
 
-
                 <textarea
                     id="input"
                     maxlength="3000"
                     placeholder="For example: Arthur opened the door and saw..."
+                    aria-label="Начало текста"
                 ></textarea>
-
 
 
                 <div class="input-bottom">
@@ -256,7 +325,6 @@
 
                     </div>
 
-
                 </div>
 
 
@@ -271,9 +339,9 @@
 
 
 
-            <!-- =========================
-                 RESULT
-            ========================== -->
+            <!-- ==================================================
+                 RESULT PANEL
+            =================================================== -->
 
             <section class="panel result-panel">
 
@@ -298,9 +366,7 @@
                         ✦
                     </div>
 
-
                 </div>
-
 
 
                 <div
@@ -322,17 +388,14 @@
 
 
                         <div class="empty-text">
-
                             Write the beginning of a text
                             and press “Continue”.
-
                         </div>
 
 
                     </div>
 
                 </div>
-
 
             </section>
 
@@ -344,19 +407,87 @@
 
 
 
-    <!-- =========================
+    <!-- ==================================================
          FOOTER
-    ========================== -->
+    =================================================== -->
 
     <footer>
 
         NeuroProda © 2026
+        <br>
+
+        NeuroProda by CatfanapAlfik
 
     </footer>
 
 
 
-    <!-- JavaScript -->
+    <!-- ==================================================
+         SAFETY MODAL SCRIPT
+         Эти 5 секунд работают сразу при загрузке.
+    =================================================== -->
+
+    <script>
+
+        const safetyModal =
+            document.getElementById("safetyModal");
+
+        const closeSafetyBtn =
+            document.getElementById("closeSafetyBtn");
+
+
+        let safetySeconds = 5;
+
+
+        const safetyTimer =
+            setInterval(() => {
+
+                safetySeconds--;
+
+
+                if (safetySeconds > 0) {
+
+                    closeSafetyBtn.textContent =
+                        `Закрыть через ${safetySeconds}`;
+
+                } else {
+
+                    clearInterval(safetyTimer);
+
+                    closeSafetyBtn.disabled =
+                        false;
+
+                    closeSafetyBtn.textContent =
+                        "Понятно, закрыть";
+
+                }
+
+            }, 1000);
+
+
+        closeSafetyBtn.addEventListener(
+            "click",
+            () => {
+
+                safetyModal.classList.add(
+                    "hidden"
+                );
+
+                safetyModal.setAttribute(
+                    "aria-hidden",
+                    "true"
+                );
+
+            }
+        );
+
+    </script>
+
+
+
+    <!-- ==================================================
+         MAIN JAVASCRIPT
+    =================================================== -->
 
     <script src="script.js"></script>
 
