@@ -1,4 +1,59 @@
 /* ==================================================
+   SAFETY WARNING
+================================================== */
+
+const safetyModal =
+    document.getElementById("safetyModal");
+
+const closeSafetyBtn =
+    document.getElementById("closeSafetyBtn");
+
+
+let safetySeconds = 5;
+
+
+const safetyTimer =
+    setInterval(() => {
+
+        safetySeconds--;
+
+        if (safetySeconds > 0) {
+
+            closeSafetyBtn.textContent =
+                `Закрыть через ${safetySeconds}`;
+
+        } else {
+
+            clearInterval(safetyTimer);
+
+            closeSafetyBtn.disabled =
+                false;
+
+            closeSafetyBtn.textContent =
+                "Понятно, закрыть";
+
+        }
+
+    }, 1000);
+
+
+closeSafetyBtn.addEventListener(
+    "click",
+    () => {
+
+        safetyModal.classList.add(
+            "hidden"
+        );
+
+        safetyModal.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+    }
+);
+
+/* ==================================================
    NEUROPRODA — SCRIPT.JS
    GitHub + Cloudflare Pages + Cloudflare Worker
 ================================================== */
