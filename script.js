@@ -2,6 +2,7 @@
    NEUROPRODA — SCRIPT.JS
 ================================================== */
 
+
 const WORKER_URL =
     "https://neuroproda-api.samchukdmitrij2015.workers.dev";
 
@@ -10,15 +11,23 @@ const WORKER_URL =
    ELEMENTS
 ================================================== */
 
-const input = document.getElementById("input");
-const counter = document.getElementById("counter");
-const result = document.getElementById("result");
+const input =
+    document.getElementById("input");
+
+const counter =
+    document.getElementById("counter");
+
+const result =
+    document.getElementById("result");
 
 const generateBtn =
     document.getElementById("generateBtn");
 
 const clearBtn =
     document.getElementById("clearBtn");
+
+const reportBtn =
+    document.getElementById("reportBtn");
 
 const statusText =
     document.getElementById("statusText");
@@ -36,6 +45,10 @@ const topics =
 
 let selectedTopic = "Без темы";
 
+let lastInputText = "";
+
+let lastGeneratedText = "";
+
 
 /* ==================================================
    TOPICS
@@ -43,18 +56,29 @@ let selectedTopic = "Без темы";
 
 topics.forEach((button) => {
 
-    button.addEventListener("click", () => {
+    button.addEventListener(
+        "click",
+        () => {
 
-        topics.forEach((item) => {
-            item.classList.remove("active");
-        });
+            topics.forEach((item) => {
 
-        button.classList.add("active");
+                item.classList.remove(
+                    "active"
+                );
 
-        selectedTopic =
-            button.textContent.trim();
+            });
 
-    });
+
+            button.classList.add(
+                "active"
+            );
+
+
+            selectedTopic =
+                button.textContent.trim();
+
+        }
+    );
 
 });
 
@@ -65,12 +89,15 @@ topics.forEach((button) => {
 
 if (input && counter) {
 
-    input.addEventListener("input", () => {
+    input.addEventListener(
+        "input",
+        () => {
 
-        counter.textContent =
-            input.value.length;
+            counter.textContent =
+                input.value.length;
 
-    });
+        }
+    );
 
 }
 
@@ -79,11 +106,17 @@ if (input && counter) {
    CONNECTION STATUS
 ================================================== */
 
-function updateConnectionStatus(isOnline) {
+function updateConnectionStatus(
+    isOnline
+) {
 
-    if (!statusText || !statusDot) {
+    if (
+        !statusText ||
+        !statusDot
+    ) {
         return;
     }
+
 
     if (isOnline) {
 
@@ -113,10 +146,29 @@ function updateConnectionStatus(isOnline) {
 
 
 /* ==================================================
+   SHOW ERROR
+================================================== */
+
+function showError(
+    message
+) {
+
+    result.className =
+        "result error";
+
+    result.textContent =
+`Не удалось получить продолжение.
+
+${message || "Произошла неизвестная ошибка."}`;
+
+}
+
+
+/* ==================================================
    OFFLINE
 ================================================== */
 
-function showOfflineMessage() {
+function showOffline() {
 
     result.className =
         "result offline";
@@ -132,19 +184,35 @@ NeuroProda временно не может продолжить текст.`;
 
 
 /* ==================================================
-   ERROR
+   HIDE REPORT
 ================================================== */
 
-function showError(message) {
+function hideReportButton() {
 
-    result.className =
-        "result error";
+    if (!reportBtn) {
+        return;
+    }
 
-    result.textContent =
-`Не удалось получить продолжение.
+    reportBtn.classList.remove(
+        "visible"
+    );
 
-Причина:
-${message || "Неизвестная ошибка."}`;
+}
+
+
+/* ==================================================
+   SHOW REPORT
+================================================== */
+
+function showReportButton() {
+
+    if (!reportBtn) {
+        return;
+    }
+
+    reportBtn.classList.add(
+        "visible"
+    );
 
 }
 
@@ -159,9 +227,12 @@ if (generateBtn) {
         "click",
         async () => {
 
+            hideReportButton();
+
+
             if (!navigator.onLine) {
 
-                showOfflineMessage();
+                showOffline();
 
                 return;
 
@@ -187,14 +258,19 @@ if (generateBtn) {
             }
 
 
+            lastInputText =
+                text;
+
+
             generateBtn.disabled =
                 true;
+
 
             result.className =
                 "result loading";
 
             result.textContent =
-                "NeuroProda придумывает продолжение...";
+                "NeuroProda проверяет запрос и придумывает продолжение...";
 
 
             try {
@@ -210,33 +286,37 @@ if (generateBtn) {
                                     "application/json"
                             },
 
-                            body: JSON.stringify({
-                                text,
-                                topic:
-                                    selectedTopic
-                            })
+                            body:
+                                JSON.stringify({
+
+                                    text,
+
+                                    topic:
+                                        selectedTopic
+
+                                })
                         }
                     );
 
 
-                const rawText =
+                const raw =
                     await response.text();
 
 
                 let data = null;
 
 
-                if (rawText.trim()) {
+                if (raw.trim()) {
 
                     try {
 
                         data =
-                            JSON.parse(rawText);
+                            JSON.parse(raw);
 
                     } catch {
 
                         throw new Error(
-                            rawText
+                            raw
                         );
 
                     }
@@ -262,7 +342,7 @@ if (generateBtn) {
 
                     result.textContent =
                         data.message ||
-                        "Запрос заблокирован.";
+                        "Запрос не прошёл проверку безопасности.";
 
                     return;
 
@@ -272,17 +352,24 @@ if (generateBtn) {
                 if (!data?.text) {
 
                     throw new Error(
-                        "Worker не вернул текст."
+                        "Нейросеть не вернула текст."
                     );
 
                 }
+
+
+                lastGeneratedText =
+                    data.text;
 
 
                 result.className =
                     "result success";
 
                 result.textContent =
-                    data.text;
+                    lastGeneratedText;
+
+
+                showReportButton();
 
             }
 
@@ -315,6 +402,157 @@ if (generateBtn) {
 
 
 /* ==================================================
+   REPORT
+================================================== */
+
+if (reportBtn) {
+
+    reportBtn.addEventListener(
+        "click",
+        async () => {
+
+            if (
+                !lastInputText ||
+                !lastGeneratedText
+            ) {
+
+                return;
+
+            }
+
+
+            const confirmed =
+                window.confirm(
+                    "Отправить жалобу на это продолжение?"
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            reportBtn.disabled =
+                true;
+
+            reportBtn.textContent =
+                "Отправка...";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${WORKER_URL}/api/report`,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    phrase:
+                                        lastInputText,
+
+                                    continuation:
+                                        lastGeneratedText,
+
+                                    topic:
+                                        selectedTopic,
+
+                                    page:
+                                        location.href,
+
+                                    userAgent:
+                                        navigator.userAgent,
+
+                                    timestamp:
+                                        new Date()
+                                            .toISOString()
+
+                                })
+                        }
+                    );
+
+
+                const raw =
+                    await response.text();
+
+
+                let data = null;
+
+
+                if (raw.trim()) {
+
+                    try {
+
+                        data =
+                            JSON.parse(raw);
+
+                    } catch {
+
+                        throw new Error(
+                            "Некорректный ответ Worker."
+                        );
+
+                    }
+
+                }
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data?.error ||
+                        `HTTP ${response.status}`
+                    );
+
+                }
+
+
+                alert(
+                    "Жалоба отправлена. Спасибо за помощь!"
+                );
+
+
+                reportBtn.textContent =
+                    "Жалоба отправлена";
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "Report error:",
+                    error
+                );
+
+
+                alert(
+                    "Не удалось отправить жалобу. Попробуйте позже."
+                );
+
+
+                reportBtn.disabled =
+                    false;
+
+                reportBtn.textContent =
+                    "Это оскорбительно";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* ==================================================
    CLEAR
 ================================================== */
 
@@ -329,8 +567,20 @@ if (clearBtn) {
             counter.textContent =
                 "0";
 
+
+            lastInputText =
+                "";
+
+            lastGeneratedText =
+                "";
+
+
+            hideReportButton();
+
+
             result.className =
                 "result";
+
 
             result.innerHTML = `
 
@@ -350,7 +600,9 @@ if (clearBtn) {
                     </div>
 
                 </div>
+
             `;
+
 
             input.focus();
 
@@ -361,14 +613,16 @@ if (clearBtn) {
 
 
 /* ==================================================
-   INTERNET EVENTS
+   NETWORK
 ================================================== */
 
 window.addEventListener(
     "offline",
     () => {
 
-        updateConnectionStatus(false);
+        updateConnectionStatus(
+            false
+        );
 
     }
 );
@@ -378,7 +632,9 @@ window.addEventListener(
     "online",
     () => {
 
-        updateConnectionStatus(true);
+        updateConnectionStatus(
+            true
+        );
 
     }
 );
