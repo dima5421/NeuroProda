@@ -1,435 +1,111 @@
 /* =========================================
-   NEUROPRODA — STYLE.CSS
+   SAFETY WARNING
 ========================================= */
 
-* {
-    box-sizing: border-box;
-}
+.safety-modal {
+    position: fixed;
 
-html {
-    scroll-behavior: smooth;
-}
+    inset: 0;
 
-body {
-    margin: 0;
-    min-height: 100vh;
-
-    font-family:
-        Inter,
-        Arial,
-        Helvetica,
-        sans-serif;
-
-    color: #f5f5f7;
-
-    background:
-        radial-gradient(
-            700px 450px at 10% 0%,
-            rgba(124, 58, 237, 0.20),
-            transparent 65%
-        ),
-        radial-gradient(
-            650px 450px at 90% 100%,
-            rgba(59, 130, 246, 0.10),
-            transparent 65%
-        ),
-        #08080c;
-}
-
-
-/* =========================================
-   TOP BAR
-========================================= */
-
-.topbar {
-    height: 74px;
-
-    padding: 0 34px;
+    z-index: 9999;
 
     display: flex;
+
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
 
-    position: sticky;
-    top: 0;
-    z-index: 100;
-
-    background: rgba(8, 8, 12, 0.82);
-
-    border-bottom:
-        1px solid rgba(255, 255, 255, 0.07);
-
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-}
-
-
-/* =========================================
-   LOGO
-========================================= */
-
-.logo {
-    font-size: 25px;
-    font-weight: 800;
-
-    letter-spacing: -0.8px;
-}
-
-.logo span {
-    color: #955cff;
-}
-
-.subtitle {
-    margin-top: 3px;
-
-    color: #70707d;
-
-    font-size: 12px;
-}
-
-
-/* =========================================
-   STATUS
-========================================= */
-
-.status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    padding: 8px 12px;
-
-    border-radius: 10px;
-
-    background: rgba(255, 255, 255, 0.035);
-
-    border:
-        1px solid rgba(255, 255, 255, 0.06);
-
-    color: #9898a5;
-
-    font-size: 12px;
-}
-
-.status-dot {
-    width: 7px;
-    height: 7px;
-
-    border-radius: 50%;
-
-    background: #53d769;
-
-    box-shadow:
-        0 0 10px rgba(83, 215, 105, 0.8);
-}
-
-
-/* =========================================
-   MAIN LAYOUT
-========================================= */
-
-.layout {
-    width: min(1250px, 94%);
-
-    margin: 32px auto 70px;
-
-    display: grid;
-
-    grid-template-columns: 240px 1fr;
-
-    gap: 20px;
-}
-
-
-/* =========================================
-   SIDEBAR
-========================================= */
-
-.sidebar {
-    height: fit-content;
-
-    padding: 18px;
-
-    border:
-        1px solid rgba(255, 255, 255, 0.07);
-
-    border-radius: 18px;
+    padding: 20px;
 
     background:
-        rgba(20, 20, 27, 0.86);
+        rgba(0, 0, 0, 0.76);
 
-    box-shadow:
-        0 20px 50px rgba(0, 0, 0, 0.25);
+    backdrop-filter:
+        blur(10px);
+
+    -webkit-backdrop-filter:
+        blur(10px);
 }
 
-.side-title {
-    margin:
-        4px 10px 14px;
-
-    color: #777783;
-
-    font-size: 11px;
-
-    font-weight: 700;
-
-    letter-spacing: 1px;
+.safety-modal.hidden {
+    display: none;
 }
 
+.safety-box {
+    width: min(520px, 100%);
 
-/* =========================================
-   TOPIC BUTTONS
-========================================= */
+    padding: 30px;
 
-.topics {
-    display: flex;
-    flex-direction: column;
-
-    gap: 5px;
-}
-
-.topic {
-    width: 100%;
-
-    padding: 11px 13px;
-
-    border-radius: 10px;
-
-    border:
-        1px solid transparent;
-
-    background: transparent;
-
-    color: #92929e;
-
-    text-align: left;
-
-    font-family: inherit;
-
-    font-size: 13px;
-
-    cursor: pointer;
-
-    transition:
-        background 0.18s ease,
-        color 0.18s ease,
-        border 0.18s ease,
-        transform 0.18s ease;
-}
-
-.topic:hover {
-    background:
-        rgba(255, 255, 255, 0.045);
-
-    color: white;
-
-    transform:
-        translateX(2px);
-}
-
-.topic.active {
-    color: white;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(124, 58, 237, 0.32),
-            rgba(124, 58, 237, 0.10)
-        );
-
-    border:
-        1px solid rgba(145, 92, 255, 0.28);
-
-    box-shadow:
-        inset 0 0 20px
-        rgba(124, 58, 237, 0.05);
-}
-
-
-/* =========================================
-   WORKSPACE
-========================================= */
-
-.workspace {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 20px;
-}
-
-
-/* =========================================
-   PANELS
-========================================= */
-
-.panel {
-    padding: 25px;
-
-    border:
-        1px solid rgba(255, 255, 255, 0.07);
-
-    border-radius: 20px;
+    border-radius: 22px;
 
     background:
         linear-gradient(
             145deg,
-            rgba(27, 27, 36, 0.95),
-            rgba(16, 16, 22, 0.95)
+            #1c1c26,
+            #111119
         );
 
-    box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.28);
-}
-
-
-/* =========================================
-   PANEL HEADER
-========================================= */
-
-.panel-header {
-    display: flex;
-
-    align-items: flex-start;
-    justify-content: space-between;
-
-    gap: 20px;
-
-    margin-bottom: 20px;
-}
-
-.panel-header h1,
-.panel-header h2 {
-    margin: 0;
-
-    font-size: 20px;
-
-    letter-spacing: -0.4px;
-}
-
-.panel-header p {
-    margin: 6px 0 0;
-
-    color: #71717d;
-
-    font-size: 13px;
-}
-
-
-/* =========================================
-   AI BADGE
-========================================= */
-
-.model-badge {
-    padding: 7px 10px;
-
-    border-radius: 8px;
-
-    color: #ad8aff;
-
-    background:
-        rgba(124, 58, 237, 0.10);
-
     border:
-        1px solid rgba(124, 58, 237, 0.18);
-
-    font-size: 10px;
-
-    font-weight: 700;
-
-    letter-spacing: 0.8px;
-
-    white-space: nowrap;
-}
-
-
-/* =========================================
-   TEXTAREA
-========================================= */
-
-textarea {
-    width: 100%;
-
-    min-height: 210px;
-
-    padding: 18px;
-
-    resize: vertical;
-
-    outline: none;
-
-    border-radius: 15px;
-
-    border:
-        1px solid rgba(255, 255, 255, 0.08);
-
-    background:
-        #0e0e14;
-
-    color: white;
-
-    font-family: inherit;
-
-    font-size: 15px;
-
-    line-height: 1.65;
-
-    transition:
-        border 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-textarea::placeholder {
-    color: #4f4f59;
-}
-
-textarea:focus {
-    border-color:
-        rgba(148, 92, 255, 0.55);
+        1px solid rgba(255, 255, 255, 0.09);
 
     box-shadow:
-        0 0 0 3px
-        rgba(124, 58, 237, 0.08);
+        0 30px 100px rgba(0, 0, 0, 0.6);
+
+    text-align: center;
 }
 
+.safety-icon {
+    width: 46px;
+    height: 46px;
 
-/* =========================================
-   INPUT BOTTOM
-========================================= */
-
-.input-bottom {
-    margin-top: 12px;
+    margin:
+        0 auto 16px;
 
     display: flex;
 
     align-items: center;
+    justify-content: center;
 
-    justify-content: space-between;
+    border-radius: 14px;
 
-    gap: 15px;
+    color: #c9a8ff;
+
+    background:
+        rgba(124, 58, 237, 0.13);
+
+    border:
+        1px solid rgba(145, 92, 255, 0.20);
+
+    font-size: 21px;
+    font-weight: 800;
 }
 
-.counter {
-    color: #575763;
+.safety-box h2 {
+    margin: 0;
 
-    font-size: 11px;
+    font-size: 22px;
+
+    color: white;
 }
 
-.actions {
-    display: flex;
+.safety-box p {
+    margin:
+        14px 0 0;
 
-    gap: 8px;
+    color: #92929d;
+
+    font-size: 13px;
+
+    line-height: 1.7;
 }
 
+#closeSafetyBtn {
+    width: 100%;
 
-/* =========================================
-   BUTTONS
-========================================= */
+    margin-top: 24px;
 
-.secondary,
-.generate {
-    height: 42px;
+    height: 44px;
 
-    padding: 0 17px;
+    border: none;
 
     border-radius: 11px;
 
@@ -437,38 +113,9 @@ textarea:focus {
 
     font-size: 13px;
 
-    font-weight: 600;
+    font-weight: 700;
 
-    cursor: pointer;
-
-    transition:
-        transform 0.18s ease,
-        background 0.18s ease,
-        box-shadow 0.18s ease,
-        opacity 0.18s ease;
-}
-
-.secondary {
-    color: #9999a4;
-
-    background:
-        #202029;
-
-    border:
-        1px solid rgba(255, 255, 255, 0.07);
-}
-
-.secondary:hover {
     color: white;
-
-    background:
-        #292932;
-}
-
-.generate {
-    color: white;
-
-    border: none;
 
     background:
         linear-gradient(
@@ -477,266 +124,20 @@ textarea:focus {
             #9a61ff
         );
 
-    box-shadow:
-        0 8px 24px
-        rgba(124, 58, 237, 0.22);
+    cursor: pointer;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
 }
 
-.generate:hover {
+#closeSafetyBtn:disabled {
+    opacity: 0.45;
+
+    cursor: not-allowed;
+}
+
+#closeSafetyBtn:not(:disabled):hover {
     transform:
         translateY(-1px);
-
-    box-shadow:
-        0 12px 30px
-        rgba(124, 58, 237, 0.35);
-}
-
-.generate:active {
-    transform:
-        translateY(1px);
-}
-
-.generate:disabled {
-    opacity: 0.55;
-
-    cursor: wait;
-
-    transform: none;
-
-    box-shadow: none;
-}
-
-
-/* =========================================
-   NOTE
-========================================= */
-
-.note {
-    margin-top: 10px;
-
-    color: #555561;
-
-    font-size: 12px;
-}
-
-
-/* =========================================
-   RESULT
-========================================= */
-
-.result {
-    min-height: 230px;
-
-    padding: 20px;
-
-    border-radius: 15px;
-
-    background:
-        #0d0d13;
-
-    border:
-        1px solid rgba(255, 255, 255, 0.05);
-
-    color: #d8d8e0;
-
-    white-space: pre-wrap;
-
-    line-height: 1.75;
-
-    font-size: 15px;
-}
-
-
-/* =========================================
-   RESULT STATES
-========================================= */
-
-.result.success {
-    color: #dfdfea;
-}
-
-.result.loading {
-    color: #a985ff;
-
-    animation:
-        pulse 1.2s infinite alternate;
-}
-
-.result.error,
-.result.offline {
-    color: #ff8888;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(70, 20, 20, 0.24),
-            rgba(30, 15, 18, 0.20)
-        );
-
-    border-color:
-        rgba(255, 95, 95, 0.13);
-}
-
-
-/* =========================================
-   EMPTY RESULT
-========================================= */
-
-.empty-result {
-    min-height: 185px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    text-align: center;
-}
-
-.empty-icon,
-.result-icon {
-    width: 40px;
-    height: 40px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 11px;
-
-    color: #a97dff;
-
-    background:
-        rgba(124, 58, 237, 0.10);
-
-    border:
-        1px solid rgba(145, 92, 255, 0.08);
-}
-
-.empty-icon {
-    margin-bottom: 12px;
-}
-
-.empty-title {
-    color: #aaaab4;
-
-    font-size: 14px;
-
-    font-weight: 600;
-}
-
-.empty-text {
-    margin-top: 5px;
-
-    color: #5f5f69;
-
-    font-size: 12px;
-}
-
-
-/* =========================================
-   FOOTER
-========================================= */
-
-footer {
-    padding:
-        25px;
-
-    border-top:
-        1px solid rgba(255, 255, 255, 0.04);
-
-    text-align: center;
-
-    color: #44444e;
-
-    font-size: 11px;
-}
-
-
-/* =========================================
-   ANIMATION
-========================================= */
-
-@keyframes pulse {
-
-    from {
-        opacity: 0.45;
-    }
-
-    to {
-        opacity: 1;
-    }
-
-}
-
-
-/* =========================================
-   MOBILE
-========================================= */
-
-@media (max-width: 800px) {
-
-    .topbar {
-        height: auto;
-
-        min-height: 74px;
-
-        padding:
-            14px 18px;
-    }
-
-
-    .layout {
-        width: min(94%, 650px);
-
-        grid-template-columns: 1fr;
-
-        margin-top: 22px;
-    }
-
-
-    .topics {
-        display: grid;
-
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-    }
-
-
-    .topic {
-        text-align: center;
-    }
-
-
-    .input-bottom {
-        align-items: stretch;
-
-        flex-direction: column;
-    }
-
-
-    .actions {
-        width: 100%;
-    }
-
-
-    .secondary,
-    .generate {
-        flex: 1;
-    }
-
-
-    .panel-header {
-        gap: 10px;
-    }
-
-
-    .model-badge {
-        display: none;
-    }
-
 }
