@@ -12,7 +12,7 @@
 
     <meta
         name="description"
-        content="NeuroProda — многоязычное AI-продолжение текста."
+        content="NeuroProda — AI-сервис для продолжения текста."
     >
 
     <title>NeuroProda — AI text continuation</title>
@@ -22,6 +22,201 @@
         href="style.css"
     >
 
+    <style>
+
+        /* ==================================================
+           SAFETY / DISCLAIMER
+        ================================================== */
+
+        .safety-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            background: rgba(0, 0, 0, 0.82);
+
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+
+            transition:
+                opacity 0.25s ease,
+                visibility 0.25s ease;
+        }
+
+        .safety-modal.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .safety-box {
+            width: min(560px, 100%);
+
+            padding: 30px;
+
+            border-radius: 22px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #1c1c26,
+                    #101017
+                );
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.09);
+
+            box-shadow:
+                0 30px 100px
+                rgba(0, 0, 0, 0.65);
+
+            text-align: center;
+        }
+
+        .safety-icon {
+            width: 48px;
+            height: 48px;
+
+            margin: 0 auto 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 14px;
+
+            color: #d3b6ff;
+
+            background:
+                rgba(124, 58, 237, 0.14);
+
+            border:
+                1px solid
+                rgba(145, 92, 255, 0.22);
+
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .safety-box h2 {
+            margin: 0;
+
+            color: #ffffff;
+
+            font-size: 22px;
+            line-height: 1.3;
+        }
+
+        .safety-box p {
+            margin: 14px 0 0;
+
+            color: #9696a3;
+
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        #closeSafetyBtn {
+            width: 100%;
+
+            margin-top: 24px;
+
+            height: 44px;
+
+            border: 0;
+            border-radius: 11px;
+
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7540dc,
+                    #9a61ff
+                );
+
+            cursor: pointer;
+
+            transition:
+                opacity 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        #closeSafetyBtn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        #closeSafetyBtn:not(:disabled):hover {
+            transform: translateY(-1px);
+        }
+
+
+        /* ==================================================
+           REPORT BUTTON
+        ================================================== */
+
+        .report-area {
+            margin-top: 12px;
+
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .report-button {
+            display: none;
+
+            padding: 8px 12px;
+
+            border-radius: 9px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.08);
+
+            background:
+                rgba(255, 255, 255, 0.035);
+
+            color: #777783;
+
+            font-family: inherit;
+            font-size: 11px;
+
+            cursor: pointer;
+
+            transition:
+                color 0.2s ease,
+                background 0.2s ease,
+                border 0.2s ease;
+        }
+
+        .report-button:hover {
+            color: #ff8a8a;
+
+            background:
+                rgba(255, 80, 80, 0.07);
+
+            border-color:
+                rgba(255, 80, 80, 0.18);
+        }
+
+        .report-button.visible {
+            display: inline-block;
+        }
+
+    </style>
+
 </head>
 
 
@@ -30,7 +225,7 @@
 
     <!-- ==================================================
          SAFETY WARNING
-    =================================================== -->
+    ================================================== -->
 
     <div
         id="safetyModal"
@@ -49,33 +244,33 @@
                 !
             </div>
 
-
             <h2 id="safetyTitle">
                 Перед началом
             </h2>
 
-
             <p>
-                Нейропрода не принимает запросы на острые
-                темы, например — про политику либо
-                самоуб**ство.
+                Нейропрода не принимает запросы на острые темы,
+                например — про политику либо самоуб**ство.
             </p>
 
-
             <p>
-                Люди могут серьёзно отнестись к текстам
-                под данные темы, и такие материалы могут
-                быть восприняты неправильно или причинить
-                вред.
+                Люди могут серьёзно отнестись к текстам под
+                данные темы и так далее. Такие материалы могут
+                быть восприняты неправильно или причинить вред.
             </p>
 
-
             <p>
-                Пожалуйста, используйте NeuroProda для
-                безопасных историй, юмора, фантастики,
-                игр, музыки и других нейтральных тем.
+                NeuroProda — искусственный интеллект.
+                Она не знает, что пишет, и может допускать ошибки,
+                неправильно понимать контекст, придумывать факты
+                или создавать странные продолжения.
             </p>
 
+            <p>
+                Используйте результаты прежде всего для творчества
+                и развлечения и не воспринимайте их как
+                достоверную информацию.
+            </p>
 
             <button
                 id="closeSafetyBtn"
@@ -92,8 +287,8 @@
 
 
     <!-- ==================================================
-         TOP BAR
-    =================================================== -->
+         HEADER
+    ================================================== -->
 
     <header class="topbar">
 
@@ -129,14 +324,14 @@
 
     <!-- ==================================================
          MAIN
-    =================================================== -->
+    ================================================== -->
 
     <main class="layout">
 
 
         <!-- ==================================================
              SIDEBAR
-        =================================================== -->
+        ================================================== -->
 
         <aside class="sidebar">
 
@@ -147,14 +342,12 @@
 
             <div class="topics">
 
-
                 <button
                     class="topic active"
                     type="button"
                 >
                     Без темы
                 </button>
-
 
                 <button
                     class="topic"
@@ -163,14 +356,12 @@
                     Комедия
                 </button>
 
-
                 <button
                     class="topic"
                     type="button"
                 >
                     Пацанские цитаты
                 </button>
-
 
                 <button
                     class="topic"
@@ -179,14 +370,12 @@
                     История
                 </button>
 
-
                 <button
                     class="topic"
                     type="button"
                 >
                     Фантастика
                 </button>
-
 
                 <button
                     class="topic"
@@ -195,14 +384,12 @@
                     Хоррор
                 </button>
 
-
                 <button
                     class="topic"
                     type="button"
                 >
                     Игры
                 </button>
-
 
                 <button
                     class="topic"
@@ -211,14 +398,12 @@
                     Мемы
                 </button>
 
-
                 <button
                     class="topic"
                     type="button"
                 >
                     Технологии
                 </button>
-
 
                 <button
                     class="topic"
@@ -227,14 +412,12 @@
                     Музыка
                 </button>
 
-
                 <button
                     class="topic"
                     type="button"
                 >
                     Теории заговора
                 </button>
-
 
             </div>
 
@@ -244,19 +427,18 @@
 
         <!-- ==================================================
              WORKSPACE
-        =================================================== -->
+        ================================================== -->
 
         <section class="workspace">
 
 
             <!-- ==================================================
-                 INPUT PANEL
-            =================================================== -->
+                 INPUT
+            ================================================== -->
 
             <section class="panel">
 
                 <div class="panel-header">
-
 
                     <div>
 
@@ -271,11 +453,9 @@
 
                     </div>
 
-
                     <div class="model-badge">
                         NEURO AI
                     </div>
-
 
                 </div>
 
@@ -290,7 +470,6 @@
 
                 <div class="input-bottom">
 
-
                     <div class="counter">
 
                         <span id="counter">
@@ -304,7 +483,6 @@
 
                     <div class="actions">
 
-
                         <button
                             id="clearBtn"
                             class="secondary"
@@ -312,7 +490,6 @@
                         >
                             Clear
                         </button>
-
 
                         <button
                             id="generateBtn"
@@ -322,17 +499,14 @@
                             ✦ Continue
                         </button>
 
-
                     </div>
 
                 </div>
 
 
                 <div class="note">
-
                     The more interesting the beginning,
                     the more interesting the continuation.
-
                 </div>
 
             </section>
@@ -340,14 +514,12 @@
 
 
             <!-- ==================================================
-                 RESULT PANEL
-            =================================================== -->
+                 RESULT
+            ================================================== -->
 
             <section class="panel result-panel">
 
-
                 <div class="panel-header">
-
 
                     <div>
 
@@ -360,7 +532,6 @@
                         </p>
 
                     </div>
-
 
                     <div class="result-icon">
                         ✦
@@ -376,24 +547,33 @@
 
                     <div class="empty-result">
 
-
                         <div class="empty-icon">
                             ✦
                         </div>
 
-
                         <div class="empty-title">
                             Nothing here yet
                         </div>
-
 
                         <div class="empty-text">
                             Write the beginning of a text
                             and press “Continue”.
                         </div>
 
-
                     </div>
+
+                </div>
+
+
+                <div class="report-area">
+
+                    <button
+                        id="reportBtn"
+                        class="report-button"
+                        type="button"
+                    >
+                        Это оскорбительно
+                    </button>
 
                 </div>
 
@@ -402,18 +582,18 @@
 
         </section>
 
-
     </main>
 
 
 
     <!-- ==================================================
          FOOTER
-    =================================================== -->
+    ================================================== -->
 
     <footer>
 
         NeuroProda © 2026
+
         <br>
 
         NeuroProda by CatfanapAlfik
@@ -423,17 +603,20 @@
 
 
     <!-- ==================================================
-         SAFETY MODAL SCRIPT
-         Эти 5 секунд работают сразу при загрузке.
-    =================================================== -->
+         SAFETY MODAL TIMER
+    ================================================== -->
 
     <script>
 
         const safetyModal =
-            document.getElementById("safetyModal");
+            document.getElementById(
+                "safetyModal"
+            );
 
         const closeSafetyBtn =
-            document.getElementById("closeSafetyBtn");
+            document.getElementById(
+                "closeSafetyBtn"
+            );
 
 
         let safetySeconds = 5;
@@ -452,7 +635,9 @@
 
                 } else {
 
-                    clearInterval(safetyTimer);
+                    clearInterval(
+                        safetyTimer
+                    );
 
                     closeSafetyBtn.disabled =
                         false;
@@ -484,10 +669,6 @@
     </script>
 
 
-
-    <!-- ==================================================
-         MAIN JAVASCRIPT
-    =================================================== -->
 
     <script src="script.js"></script>
 
