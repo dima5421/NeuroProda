@@ -1,66 +1,5 @@
 /* ==================================================
-   SAFETY WARNING
-================================================== */
-
-const safetyModal =
-    document.getElementById("safetyModal");
-
-const closeSafetyBtn =
-    document.getElementById("closeSafetyBtn");
-
-
-let safetySeconds = 5;
-
-
-const safetyTimer =
-    setInterval(() => {
-
-        safetySeconds--;
-
-        if (safetySeconds > 0) {
-
-            closeSafetyBtn.textContent =
-                `Закрыть через ${safetySeconds}`;
-
-        } else {
-
-            clearInterval(safetyTimer);
-
-            closeSafetyBtn.disabled =
-                false;
-
-            closeSafetyBtn.textContent =
-                "Понятно, закрыть";
-
-        }
-
-    }, 1000);
-
-
-closeSafetyBtn.addEventListener(
-    "click",
-    () => {
-
-        safetyModal.classList.add(
-            "hidden"
-        );
-
-        safetyModal.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-    }
-);
-
-/* ==================================================
    NEUROPRODA — SCRIPT.JS
-   GitHub + Cloudflare Pages + Cloudflare Worker
-================================================== */
-
-
-/* ==================================================
-   CLOUDFLARE WORKER
 ================================================== */
 
 const WORKER_URL =
@@ -68,17 +7,12 @@ const WORKER_URL =
 
 
 /* ==================================================
-   ЭЛЕМЕНТЫ
+   ELEMENTS
 ================================================== */
 
-const input =
-    document.getElementById("input");
-
-const counter =
-    document.getElementById("counter");
-
-const result =
-    document.getElementById("result");
+const input = document.getElementById("input");
+const counter = document.getElementById("counter");
+const result = document.getElementById("result");
 
 const generateBtn =
     document.getElementById("generateBtn");
@@ -97,21 +31,21 @@ const topics =
 
 
 /* ==================================================
-   СОСТОЯНИЕ
+   STATE
 ================================================== */
 
 let selectedTopic = "Без темы";
 
 
 /* ==================================================
-   ВЫБОР ТЕМЫ
+   TOPICS
 ================================================== */
 
-topics.forEach(button => {
+topics.forEach((button) => {
 
     button.addEventListener("click", () => {
 
-        topics.forEach(item => {
+        topics.forEach((item) => {
             item.classList.remove("active");
         });
 
@@ -126,22 +60,30 @@ topics.forEach(button => {
 
 
 /* ==================================================
-   СЧЁТЧИК
+   COUNTER
 ================================================== */
 
-input.addEventListener("input", () => {
+if (input && counter) {
 
-    counter.textContent =
-        input.value.length;
+    input.addEventListener("input", () => {
 
-});
+        counter.textContent =
+            input.value.length;
+
+    });
+
+}
 
 
 /* ==================================================
-   СТАТУС ИНТЕРНЕТА
+   CONNECTION STATUS
 ================================================== */
 
 function updateConnectionStatus(isOnline) {
+
+    if (!statusText || !statusDot) {
+        return;
+    }
 
     if (isOnline) {
 
@@ -182,10 +124,6 @@ function showOfflineMessage() {
     result.textContent =
 `У автора данного сайта нет интернета, простите извините.
 
-Можете заняться другими делами — а интернет у автора появится сегодня, либо завтра.
-
-А если нет уже неделю, то он уехал временно в отпуск.
-
 Попробуйте зайти немного позже.
 
 NeuroProda временно не может продолжить текст.`;
@@ -194,10 +132,10 @@ NeuroProda временно не может продолжить текст.`;
 
 
 /* ==================================================
-   ОШИБКА
+   ERROR
 ================================================== */
 
-function showServerError(message) {
+function showError(message) {
 
     result.className =
         "result error";
@@ -205,310 +143,225 @@ function showServerError(message) {
     result.textContent =
 `Не удалось получить продолжение.
 
-NeuroProda не смогла связаться с нейросетью.
-
 Причина:
-${message}
-
-Попробуйте ещё раз немного позже.`;
+${message || "Неизвестная ошибка."}`;
 
 }
 
 
 /* ==================================================
-   ПРОВЕРКА WORKER
+   GENERATE
 ================================================== */
 
-function isWorkerConfigured() {
+if (generateBtn) {
 
-    return (
-        WORKER_URL &&
-        WORKER_URL.startsWith("https://") &&
-        !WORKER_URL.includes("ТВОЙ-WORKER")
-    );
+    generateBtn.addEventListener(
+        "click",
+        async () => {
 
-}
+            if (!navigator.onLine) {
 
-
-/* ==================================================
-   ГЕНЕРАЦИЯ ТЕКСТА
-================================================== */
-
-generateBtn.addEventListener(
-    "click",
-    async () => {
-
-        /* ------------------------------
-           Интернет
-        ------------------------------ */
-
-        if (!navigator.onLine) {
-
-            showOfflineMessage();
-
-            return;
-
-        }
-
-
-        /* ------------------------------
-           Проверка Worker
-        ------------------------------ */
-
-        if (!isWorkerConfigured()) {
-
-            result.className =
-                "result error";
-
-            result.textContent =
-`NeuroProda ещё не подключена к Cloudflare Worker.
-
-Проверь адрес Worker в script.js.`;
-
-            return;
-
-        }
-
-
-        /* ------------------------------
-           Получаем текст
-        ------------------------------ */
-
-        const text =
-            input.value.trim();
-
-
-        /* ------------------------------
-           Пустое поле
-        ------------------------------ */
-
-        if (!text) {
-
-            result.className =
-                "result error";
-
-            result.textContent =
-                "Напишите начало текста.";
-
-            input.focus();
-
-            return;
-
-        }
-
-
-        /* ------------------------------
-           Блокируем кнопку
-        ------------------------------ */
-
-        generateBtn.disabled = true;
-
-
-        /* ------------------------------
-           Загрузка
-        ------------------------------ */
-
-        result.className =
-            "result loading";
-
-        result.textContent =
-            "NeuroProda придумывает продолжение...";
-
-
-        try {
-
-            /* --------------------------
-               Запрос к Worker
-            -------------------------- */
-
-            const response =
-                await fetch(
-                    `${WORKER_URL}/api/continue`,
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body: JSON.stringify({
-
-                            text:
-                                text,
-
-                            topic:
-                                selectedTopic
-
-                        })
-                    }
-                );
-
-
-            /* --------------------------
-               Получаем JSON
-            -------------------------- */
-
-            let data;
-
-            try {
-
-                data =
-                    await response.json();
-
-            } catch {
-
-                throw new Error(
-                    "Worker вернул некорректный ответ."
-                );
-
-            }
-
-
-            /* --------------------------
-               Заблокированный запрос
-            -------------------------- */
-
-            if (data?.blocked) {
-
-                result.className =
-                    "result error";
-
-                result.textContent =
-                    data.message ||
-                    "Запрос заблокирован.";
+                showOfflineMessage();
 
                 return;
 
             }
 
 
-            /* --------------------------
-               Ошибка сервера
-            -------------------------- */
-
-            if (!response.ok) {
-
-                throw new Error(
-                    data?.error ||
-                    `HTTP ${response.status}`
-                );
-
-            }
+            const text =
+                input.value.trim();
 
 
-            /* --------------------------
-               Ответ нейросети
-            -------------------------- */
+            if (!text) {
 
-            const generatedText =
-                data?.text;
+                result.className =
+                    "result error";
 
+                result.textContent =
+                    "Напишите начало текста.";
 
-            if (!generatedText) {
+                input.focus();
 
-                throw new Error(
-                    "НейроПрода не получила текст от нейросети."
-                );
+                return;
 
             }
 
-
-            /* --------------------------
-               Показываем ответ
-            -------------------------- */
-
-            result.className =
-                "result success";
-
-            result.textContent =
-                generatedText;
-
-        }
-
-
-        catch (error) {
-
-            console.error(
-                "NeuroProda error:",
-                error
-            );
-
-
-            if (!navigator.onLine) {
-
-                showOfflineMessage();
-
-            } else {
-
-                showServerError(
-                    error?.message ||
-                    "Неизвестная ошибка."
-                );
-
-            }
-
-        }
-
-
-        finally {
 
             generateBtn.disabled =
-                false;
+                true;
+
+            result.className =
+                "result loading";
+
+            result.textContent =
+                "NeuroProda придумывает продолжение...";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${WORKER_URL}/api/continue`,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                text,
+                                topic:
+                                    selectedTopic
+                            })
+                        }
+                    );
+
+
+                const rawText =
+                    await response.text();
+
+
+                let data = null;
+
+
+                if (rawText.trim()) {
+
+                    try {
+
+                        data =
+                            JSON.parse(rawText);
+
+                    } catch {
+
+                        throw new Error(
+                            rawText
+                        );
+
+                    }
+
+                }
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data?.error ||
+                        data?.message ||
+                        `HTTP ${response.status}`
+                    );
+
+                }
+
+
+                if (data?.blocked) {
+
+                    result.className =
+                        "result error";
+
+                    result.textContent =
+                        data.message ||
+                        "Запрос заблокирован.";
+
+                    return;
+
+                }
+
+
+                if (!data?.text) {
+
+                    throw new Error(
+                        "Worker не вернул текст."
+                    );
+
+                }
+
+
+                result.className =
+                    "result success";
+
+                result.textContent =
+                    data.text;
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "NeuroProda error:",
+                    error
+                );
+
+                showError(
+                    error?.message
+                );
+
+            }
+
+
+            finally {
+
+                generateBtn.disabled =
+                    false;
+
+            }
 
         }
+    );
 
-    }
-);
+}
 
 
 /* ==================================================
-   ОЧИСТКА
+   CLEAR
 ================================================== */
 
-clearBtn.addEventListener(
-    "click",
-    () => {
+if (clearBtn) {
 
-        input.value = "";
+    clearBtn.addEventListener(
+        "click",
+        () => {
 
-        counter.textContent =
-            "0";
+            input.value = "";
 
+            counter.textContent =
+                "0";
 
-        result.className =
-            "result";
+            result.className =
+                "result";
 
+            result.innerHTML = `
 
-        result.innerHTML = `
+                <div class="empty-result">
 
-            <div class="empty-result">
+                    <div class="empty-icon">
+                        ✦
+                    </div>
 
-                <div class="empty-icon">
-                    ✦
+                    <div class="empty-title">
+                        Nothing here yet
+                    </div>
+
+                    <div class="empty-text">
+                        Write the beginning of a text
+                        and press “Continue”.
+                    </div>
+
                 </div>
+            `;
 
-                <div class="empty-title">
-                    Nothing here yet
-                </div>
+            input.focus();
 
-                <div class="empty-text">
-                    Write the beginning of a text
-                    and press “Continue”.
-                </div>
+        }
+    );
 
-            </div>
-
-        `;
-
-        input.focus();
-
-    }
-);
+}
 
 
 /* ==================================================
-   ИНТЕРНЕТ ПРОПАЛ
+   INTERNET EVENTS
 ================================================== */
 
 window.addEventListener(
@@ -517,15 +370,9 @@ window.addEventListener(
 
         updateConnectionStatus(false);
 
-        showOfflineMessage();
-
     }
 );
 
-
-/* ==================================================
-   ИНТЕРНЕТ ПОЯВИЛСЯ
-================================================== */
 
 window.addEventListener(
     "online",
@@ -533,29 +380,14 @@ window.addEventListener(
 
         updateConnectionStatus(true);
 
-        result.className =
-            "result";
-
-        result.textContent =
-`Интернет снова появился.
-
-NeuroProda снова готова продолжать ваши тексты.`;
-
     }
 );
 
 
 /* ==================================================
-   НАЧАЛЬНЫЙ СТАТУС
+   START
 ================================================== */
 
 updateConnectionStatus(
     navigator.onLine
 );
-
-
-if (!navigator.onLine) {
-
-    showOfflineMessage();
-
-}
