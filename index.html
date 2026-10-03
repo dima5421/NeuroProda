@@ -15,212 +15,82 @@
         content="NeuroProda — AI-сервис для продолжения текста."
     >
 
-    <title>NeuroProda — AI text continuation</title>
+    <meta
+        name="theme-color"
+        content="#08080c"
+    >
+
+    <title>
+        NeuroProda — AI text continuation
+    </title>
 
     <link
         rel="stylesheet"
         href="style.css"
     >
 
-    <style>
-
-        /* ==================================================
-           SAFETY / DISCLAIMER
-        ================================================== */
-
-        .safety-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 99999;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            padding: 20px;
-
-            background: rgba(0, 0, 0, 0.82);
-
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-
-            transition:
-                opacity 0.25s ease,
-                visibility 0.25s ease;
-        }
-
-        .safety-modal.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .safety-box {
-            width: min(560px, 100%);
-
-            padding: 30px;
-
-            border-radius: 22px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    #1c1c26,
-                    #101017
-                );
-
-            border:
-                1px solid
-                rgba(255, 255, 255, 0.09);
-
-            box-shadow:
-                0 30px 100px
-                rgba(0, 0, 0, 0.65);
-
-            text-align: center;
-        }
-
-        .safety-icon {
-            width: 48px;
-            height: 48px;
-
-            margin: 0 auto 16px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 14px;
-
-            color: #d3b6ff;
-
-            background:
-                rgba(124, 58, 237, 0.14);
-
-            border:
-                1px solid
-                rgba(145, 92, 255, 0.22);
-
-            font-size: 21px;
-            font-weight: 800;
-        }
-
-        .safety-box h2 {
-            margin: 0;
-
-            color: #ffffff;
-
-            font-size: 22px;
-            line-height: 1.3;
-        }
-
-        .safety-box p {
-            margin: 14px 0 0;
-
-            color: #9696a3;
-
-            font-size: 13px;
-            line-height: 1.7;
-        }
-
-        #closeSafetyBtn {
-            width: 100%;
-
-            margin-top: 24px;
-
-            height: 44px;
-
-            border: 0;
-            border-radius: 11px;
-
-            font-family: inherit;
-            font-size: 13px;
-            font-weight: 700;
-
-            color: white;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #7540dc,
-                    #9a61ff
-                );
-
-            cursor: pointer;
-
-            transition:
-                opacity 0.2s ease,
-                transform 0.2s ease;
-        }
-
-        #closeSafetyBtn:disabled {
-            opacity: 0.45;
-            cursor: not-allowed;
-        }
-
-        #closeSafetyBtn:not(:disabled):hover {
-            transform: translateY(-1px);
-        }
-
-
-        /* ==================================================
-           REPORT BUTTON
-        ================================================== */
-
-        .report-area {
-            margin-top: 12px;
-
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .report-button {
-            display: none;
-
-            padding: 8px 12px;
-
-            border-radius: 9px;
-
-            border:
-                1px solid
-                rgba(255, 255, 255, 0.08);
-
-            background:
-                rgba(255, 255, 255, 0.035);
-
-            color: #777783;
-
-            font-family: inherit;
-            font-size: 11px;
-
-            cursor: pointer;
-
-            transition:
-                color 0.2s ease,
-                background 0.2s ease,
-                border 0.2s ease;
-        }
-
-        .report-button:hover {
-            color: #ff8a8a;
-
-            background:
-                rgba(255, 80, 80, 0.07);
-
-            border-color:
-                rgba(255, 80, 80, 0.18);
-        }
-
-        .report-button.visible {
-            display: inline-block;
-        }
-
-    </style>
-
 </head>
 
 
 <body>
+
+
+    <!-- ==================================================
+         SPLASH SCREEN
+    ================================================== -->
+
+    <div
+        id="splashScreen"
+        aria-hidden="true"
+    >
+
+        <div class="splash-animation">
+
+            <div class="splash-brand">
+
+                <div
+                    id="splashLogo"
+                    class="splash-logo"
+                >
+                    N
+                </div>
+
+
+                <div
+                    id="splashName"
+                    class="splash-name"
+                >
+                    Neuro<span>Proda</span>
+                </div>
+
+            </div>
+
+
+            <div
+                id="splashLoader"
+                class="splash-loader-wrap"
+            >
+
+                <div class="splash-loader">
+
+                    <div
+                        id="splashProgress"
+                        class="splash-progress"
+                    ></div>
+
+                </div>
+
+
+                <div class="splash-status">
+                    Initializing NeuroProda...
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 
 
     <!-- ==================================================
@@ -244,14 +114,17 @@
                 !
             </div>
 
+
             <h2 id="safetyTitle">
                 Перед началом
             </h2>
+
 
             <p>
                 Нейропрода не принимает запросы на острые темы,
                 например — про политику либо самоуб**ство.
             </p>
+
 
             <p>
                 Люди могут серьёзно отнестись к текстам под
@@ -259,18 +132,21 @@
                 быть восприняты неправильно или причинить вред.
             </p>
 
-            <p>
-                NeuroProda — искусственный интеллект.
-                Она не знает, что пишет, и может допускать ошибки,
-                неправильно понимать контекст, придумывать факты
-                или создавать странные продолжения.
-            </p>
 
             <p>
-                Используйте результаты прежде всего для творчества
-                и развлечения и не воспринимайте их как
-                достоверную информацию.
+                NeuroProda — искусственный интеллект.
+                Она не обладает собственным пониманием текста
+                и может допускать ошибки, неправильно понимать
+                контекст, придумывать факты или создавать
+                неожиданные продолжения.
             </p>
+
+
+            <p>
+                Используйте результаты прежде всего для
+                творчества и развлечения.
+            </p>
+
 
             <button
                 id="closeSafetyBtn"
@@ -287,7 +163,7 @@
 
 
     <!-- ==================================================
-         HEADER
+         TOP BAR
     ================================================== -->
 
     <header class="topbar">
@@ -349,12 +225,14 @@
                     Без темы
                 </button>
 
+
                 <button
                     class="topic"
                     type="button"
                 >
                     Комедия
                 </button>
+
 
                 <button
                     class="topic"
@@ -363,12 +241,14 @@
                     Пацанские цитаты
                 </button>
 
+
                 <button
                     class="topic"
                     type="button"
                 >
                     История
                 </button>
+
 
                 <button
                     class="topic"
@@ -377,12 +257,14 @@
                     Фантастика
                 </button>
 
+
                 <button
                     class="topic"
                     type="button"
                 >
                     Хоррор
                 </button>
+
 
                 <button
                     class="topic"
@@ -391,12 +273,14 @@
                     Игры
                 </button>
 
+
                 <button
                     class="topic"
                     type="button"
                 >
                     Мемы
                 </button>
+
 
                 <button
                     class="topic"
@@ -405,12 +289,14 @@
                     Технологии
                 </button>
 
+
                 <button
                     class="topic"
                     type="button"
                 >
                     Музыка
                 </button>
+
 
                 <button
                     class="topic"
@@ -433,7 +319,7 @@
 
 
             <!-- ==================================================
-                 INPUT
+                 INPUT PANEL
             ================================================== -->
 
             <section class="panel">
@@ -452,6 +338,7 @@
                         </p>
 
                     </div>
+
 
                     <div class="model-badge">
                         NEURO AI
@@ -491,6 +378,7 @@
                             Clear
                         </button>
 
+
                         <button
                             id="generateBtn"
                             class="generate"
@@ -514,7 +402,7 @@
 
 
             <!-- ==================================================
-                 RESULT
+                 RESULT PANEL
             ================================================== -->
 
             <section class="panel result-panel">
@@ -532,6 +420,7 @@
                         </p>
 
                     </div>
+
 
                     <div class="result-icon">
                         ✦
@@ -551,9 +440,11 @@
                             ✦
                         </div>
 
+
                         <div class="empty-title">
                             Nothing here yet
                         </div>
+
 
                         <div class="empty-text">
                             Write the beginning of a text
@@ -603,72 +494,8 @@
 
 
     <!-- ==================================================
-         SAFETY MODAL TIMER
+         SCRIPT
     ================================================== -->
-
-    <script>
-
-        const safetyModal =
-            document.getElementById(
-                "safetyModal"
-            );
-
-        const closeSafetyBtn =
-            document.getElementById(
-                "closeSafetyBtn"
-            );
-
-
-        let safetySeconds = 5;
-
-
-        const safetyTimer =
-            setInterval(() => {
-
-                safetySeconds--;
-
-
-                if (safetySeconds > 0) {
-
-                    closeSafetyBtn.textContent =
-                        `Закрыть через ${safetySeconds}`;
-
-                } else {
-
-                    clearInterval(
-                        safetyTimer
-                    );
-
-                    closeSafetyBtn.disabled =
-                        false;
-
-                    closeSafetyBtn.textContent =
-                        "Понятно, закрыть";
-
-                }
-
-            }, 1000);
-
-
-        closeSafetyBtn.addEventListener(
-            "click",
-            () => {
-
-                safetyModal.classList.add(
-                    "hidden"
-                );
-
-                safetyModal.setAttribute(
-                    "aria-hidden",
-                    "true"
-                );
-
-            }
-        );
-
-    </script>
-
-
 
     <script src="script.js"></script>
 
