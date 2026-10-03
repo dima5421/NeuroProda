@@ -3,6 +3,10 @@
 ================================================== */
 
 
+/* ==================================================
+   WORKER
+================================================== */
+
 const WORKER_URL =
     "https://neuroproda-api.samchukdmitrij2015.workers.dev";
 
@@ -11,83 +15,298 @@ const WORKER_URL =
    ELEMENTS
 ================================================== */
 
+const splashScreen =
+    document.getElementById(
+        "splashScreen"
+    );
+
+const splashAnimation =
+    document.querySelector(
+        ".splash-animation"
+    );
+
+const splashLoader =
+    document.getElementById(
+        "splashLoader"
+    );
+
+const splashProgress =
+    document.getElementById(
+        "splashProgress"
+    );
+
+
+const safetyModal =
+    document.getElementById(
+        "safetyModal"
+    );
+
+const closeSafetyBtn =
+    document.getElementById(
+        "closeSafetyBtn"
+    );
+
+
 const input =
-    document.getElementById("input");
+    document.getElementById(
+        "input"
+    );
 
 const counter =
-    document.getElementById("counter");
+    document.getElementById(
+        "counter"
+    );
 
 const result =
-    document.getElementById("result");
+    document.getElementById(
+        "result"
+    );
 
 const generateBtn =
-    document.getElementById("generateBtn");
+    document.getElementById(
+        "generateBtn"
+    );
 
 const clearBtn =
-    document.getElementById("clearBtn");
+    document.getElementById(
+        "clearBtn"
+    );
 
 const reportBtn =
-    document.getElementById("reportBtn");
+    document.getElementById(
+        "reportBtn"
+    );
 
 const statusText =
-    document.getElementById("statusText");
+    document.getElementById(
+        "statusText"
+    );
 
 const statusDot =
-    document.getElementById("statusDot");
+    document.getElementById(
+        "statusDot"
+    );
 
 const topics =
-    document.querySelectorAll(".topic");
+    document.querySelectorAll(
+        ".topic"
+    );
 
 
 /* ==================================================
    STATE
 ================================================== */
 
-let selectedTopic = "Без темы";
+let selectedTopic =
+    "Без темы";
 
-let lastInputText = "";
+let lastInputText =
+    "";
 
-let lastGeneratedText = "";
+let lastGeneratedText =
+    "";
+
+
+/* ==================================================
+   SPLASH SCREEN
+================================================== */
+
+function startSplash() {
+
+    if (
+        !splashScreen ||
+        !splashAnimation ||
+        !splashLoader ||
+        !splashProgress
+    ) {
+        return;
+    }
+
+
+    /*
+      0–0.85 сек:
+      большой N по центру
+    */
+
+    setTimeout(() => {
+
+        splashAnimation.classList.add(
+            "stage-two"
+        );
+
+    }, 850);
+
+
+    /*
+      1.45 сек:
+      появляется загрузка
+    */
+
+    setTimeout(() => {
+
+        splashLoader.classList.add(
+            "visible"
+        );
+
+
+        splashProgress.style.transition =
+            "width 1.7s cubic-bezier(0.22, 1, 0.36, 1)";
+
+
+        splashProgress.style.width =
+            "100%";
+
+    }, 1450);
+
+
+    /*
+      После окончания анимации
+      убираем заставку
+    */
+
+    window.addEventListener(
+        "load",
+        () => {
+
+            setTimeout(() => {
+
+                splashScreen.classList.add(
+                    "hidden"
+                );
+
+            }, 3350);
+
+        }
+    );
+
+}
+
+
+startSplash();
+
+
+/* ==================================================
+   SAFETY WARNING
+================================================== */
+
+function startSafetyTimer() {
+
+    if (
+        !safetyModal ||
+        !closeSafetyBtn
+    ) {
+        return;
+    }
+
+
+    let seconds = 5;
+
+
+    const timer =
+        setInterval(() => {
+
+            seconds--;
+
+
+            if (seconds > 0) {
+
+                closeSafetyBtn.textContent =
+                    `Закрыть через ${seconds}`;
+
+                return;
+
+            }
+
+
+            clearInterval(
+                timer
+            );
+
+
+            closeSafetyBtn.disabled =
+                false;
+
+            closeSafetyBtn.textContent =
+                "Понятно, закрыть";
+
+        }, 1000);
+
+}
+
+
+startSafetyTimer();
+
+
+if (
+    safetyModal &&
+    closeSafetyBtn
+) {
+
+    closeSafetyBtn.addEventListener(
+        "click",
+        () => {
+
+            safetyModal.classList.add(
+                "hidden"
+            );
+
+
+            safetyModal.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+        }
+    );
+
+}
 
 
 /* ==================================================
    TOPICS
 ================================================== */
 
-topics.forEach((button) => {
+topics.forEach(
+    (button) => {
 
-    button.addEventListener(
-        "click",
-        () => {
+        button.addEventListener(
+            "click",
+            () => {
 
-            topics.forEach((item) => {
+                topics.forEach(
+                    (item) => {
 
-                item.classList.remove(
+                        item.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
+
+
+                button.classList.add(
                     "active"
                 );
 
-            });
 
+                selectedTopic =
+                    button.textContent.trim();
 
-            button.classList.add(
-                "active"
-            );
+            }
+        );
 
-
-            selectedTopic =
-                button.textContent.trim();
-
-        }
-    );
-
-});
+    }
+);
 
 
 /* ==================================================
    COUNTER
 ================================================== */
 
-if (input && counter) {
+if (
+    input &&
+    counter
+) {
 
     input.addEventListener(
         "input",
@@ -145,8 +364,37 @@ function updateConnectionStatus(
 }
 
 
+updateConnectionStatus(
+    navigator.onLine
+);
+
+
+window.addEventListener(
+    "online",
+    () => {
+
+        updateConnectionStatus(
+            true
+        );
+
+    }
+);
+
+
+window.addEventListener(
+    "offline",
+    () => {
+
+        updateConnectionStatus(
+            false
+        );
+
+    }
+);
+
+
 /* ==================================================
-   SHOW ERROR
+   ERROR
 ================================================== */
 
 function showError(
@@ -184,7 +432,7 @@ NeuroProda временно не может продолжить текст.`;
 
 
 /* ==================================================
-   HIDE REPORT
+   REPORT BUTTON
 ================================================== */
 
 function hideReportButton() {
@@ -193,6 +441,7 @@ function hideReportButton() {
         return;
     }
 
+
     reportBtn.classList.remove(
         "visible"
     );
@@ -200,15 +449,12 @@ function hideReportButton() {
 }
 
 
-/* ==================================================
-   SHOW REPORT
-================================================== */
-
 function showReportButton() {
 
     if (!reportBtn) {
         return;
     }
+
 
     reportBtn.classList.add(
         "visible"
@@ -230,7 +476,9 @@ if (generateBtn) {
             hideReportButton();
 
 
-            if (!navigator.onLine) {
+            if (
+                !navigator.onLine
+            ) {
 
                 showOffline();
 
@@ -270,7 +518,7 @@ if (generateBtn) {
                 "result loading";
 
             result.textContent =
-                "NeuroProda проверяет запрос и придумывает продолжение...";
+                "NeuroProda придумывает продолжение...";
 
 
             try {
@@ -289,9 +537,12 @@ if (generateBtn) {
                             body:
                                 JSON.stringify({
 
-                                    text,
+                                    text:
+
+                                        text,
 
                                     topic:
+
                                         selectedTopic
 
                                 })
@@ -303,15 +554,20 @@ if (generateBtn) {
                     await response.text();
 
 
-                let data = null;
+                let data =
+                    null;
 
 
-                if (raw.trim()) {
+                if (
+                    raw.trim()
+                ) {
 
                     try {
 
                         data =
-                            JSON.parse(raw);
+                            JSON.parse(
+                                raw
+                            );
 
                     } catch {
 
@@ -324,32 +580,54 @@ if (generateBtn) {
                 }
 
 
-                if (!response.ok) {
+                /*
+                  СНАЧАЛА обработка
+                  блокировки, потому что Worker
+                  может вернуть blocked + 400.
+                */
 
-                    throw new Error(
-                        data?.error ||
-                        data?.message ||
-                        `HTTP ${response.status}`
-                    );
-
-                }
-
-
-                if (data?.blocked) {
+                if (
+                    data?.blocked
+                ) {
 
                     result.className =
                         "result error";
 
                     result.textContent =
                         data.message ||
-                        "Запрос не прошёл проверку безопасности.";
+                        "NeuroProda не принимает этот запрос.";
 
                     return;
 
                 }
 
 
-                if (!data?.text) {
+                /*
+                  Настоящие ошибки API.
+                */
+
+                if (
+                    !response.ok
+                ) {
+
+                    throw new Error(
+
+                        data?.error ||
+
+                        data?.details ||
+
+                        data?.message ||
+
+                        `HTTP ${response.status}`
+
+                    );
+
+                }
+
+
+                if (
+                    !data?.text
+                ) {
 
                     throw new Error(
                         "Нейросеть не вернула текст."
@@ -381,6 +659,7 @@ if (generateBtn) {
                     error
                 );
 
+
                 showError(
                     error?.message
                 );
@@ -402,7 +681,70 @@ if (generateBtn) {
 
 
 /* ==================================================
-   REPORT
+   CLEAR
+================================================== */
+
+if (clearBtn) {
+
+    clearBtn.addEventListener(
+        "click",
+        () => {
+
+            input.value =
+                "";
+
+            counter.textContent =
+                "0";
+
+
+            lastInputText =
+                "";
+
+            lastGeneratedText =
+                "";
+
+
+            hideReportButton();
+
+
+            result.className =
+                "result";
+
+
+            result.innerHTML = `
+
+                <div class="empty-result">
+
+                    <div class="empty-icon">
+                        ✦
+                    </div>
+
+
+                    <div class="empty-title">
+                        Nothing here yet
+                    </div>
+
+
+                    <div class="empty-text">
+                        Write the beginning of a text
+                        and press “Continue”.
+                    </div>
+
+                </div>
+
+            `;
+
+
+            input.focus();
+
+        }
+    );
+
+}
+
+
+/* ==================================================
+   REPORT / ALARM BUTTON
 ================================================== */
 
 if (reportBtn) {
@@ -415,15 +757,13 @@ if (reportBtn) {
                 !lastInputText ||
                 !lastGeneratedText
             ) {
-
                 return;
-
             }
 
 
             const confirmed =
                 window.confirm(
-                    "Отправить жалобу на это продолжение?"
+                    "Отправить сигнал тревоги на это продолжение?"
                 );
 
 
@@ -467,9 +807,6 @@ if (reportBtn) {
                                     page:
                                         location.href,
 
-                                    userAgent:
-                                        navigator.userAgent,
-
                                     timestamp:
                                         new Date()
                                             .toISOString()
@@ -483,15 +820,20 @@ if (reportBtn) {
                     await response.text();
 
 
-                let data = null;
+                let data =
+                    null;
 
 
-                if (raw.trim()) {
+                if (
+                    raw.trim()
+                ) {
 
                     try {
 
                         data =
-                            JSON.parse(raw);
+                            JSON.parse(
+                                raw
+                            );
 
                     } catch {
 
@@ -504,23 +846,29 @@ if (reportBtn) {
                 }
 
 
-                if (!response.ok) {
+                if (
+                    !response.ok
+                ) {
 
                     throw new Error(
+
                         data?.error ||
+
                         `HTTP ${response.status}`
+
                     );
 
                 }
 
 
                 alert(
-                    "Жалоба отправлена. Спасибо за помощь!"
+                    "🚨 Сигнал отправлен. Спасибо за помощь!"
                 );
 
 
                 reportBtn.textContent =
-                    "Жалоба отправлена";
+                    "Сигнал отправлен";
+
 
             }
 
@@ -534,7 +882,7 @@ if (reportBtn) {
 
 
                 alert(
-                    "Не удалось отправить жалобу. Попробуйте позже."
+                    "Не удалось отправить сигнал. Попробуйте позже."
                 );
 
 
@@ -550,100 +898,3 @@ if (reportBtn) {
     );
 
 }
-
-
-/* ==================================================
-   CLEAR
-================================================== */
-
-if (clearBtn) {
-
-    clearBtn.addEventListener(
-        "click",
-        () => {
-
-            input.value = "";
-
-            counter.textContent =
-                "0";
-
-
-            lastInputText =
-                "";
-
-            lastGeneratedText =
-                "";
-
-
-            hideReportButton();
-
-
-            result.className =
-                "result";
-
-
-            result.innerHTML = `
-
-                <div class="empty-result">
-
-                    <div class="empty-icon">
-                        ✦
-                    </div>
-
-                    <div class="empty-title">
-                        Nothing here yet
-                    </div>
-
-                    <div class="empty-text">
-                        Write the beginning of a text
-                        and press “Continue”.
-                    </div>
-
-                </div>
-
-            `;
-
-
-            input.focus();
-
-        }
-    );
-
-}
-
-
-/* ==================================================
-   NETWORK
-================================================== */
-
-window.addEventListener(
-    "offline",
-    () => {
-
-        updateConnectionStatus(
-            false
-        );
-
-    }
-);
-
-
-window.addEventListener(
-    "online",
-    () => {
-
-        updateConnectionStatus(
-            true
-        );
-
-    }
-);
-
-
-/* ==================================================
-   START
-================================================== */
-
-updateConnectionStatus(
-    navigator.onLine
-);
